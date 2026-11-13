@@ -154,7 +154,7 @@ window.LAB = (function () {
       try { const L = layersFor(); let pass = 0;
         const rows = ch.tests.map(t => { const req = Object.assign({}, DEF_REQ, ch.request || {}, t); const r = IAM.evaluate(L, req);
           const ok = t.expect === 'DENY' ? r.decision !== 'ALLOW' : r.decision === t.expect; if (ok) pass++;
-          return `<div class="tr ${ok ? 'ok' : 'no'}">${ok ? '✓' : '✕'} <b>${esc(t.action)}</b> on <code>${esc(t.resource || req.resource)}</code>${t.ctx ? ' with ' + esc(JSON.stringify(t.ctx)) : ''}${t.principal ? ' as ' + esc(t.principal.split(':').pop()) : ''} → ${r.decision} <i>(expected ${t.expect})</i></div>`; }).join('');
+          return `<div class="tr ${ok ? 'ok' : 'bad'}">${ok ? '✓' : '✕'} <b>${esc(t.action)}</b> on <code>${esc(t.resource || req.resource)}</code>${t.ctx ? ' with ' + esc(JSON.stringify(t.ctx)) : ''}${t.principal ? ' as ' + esc(t.principal.split(':').pop()) : ''} → ${r.decision} <i>(expected ${t.expect})</i></div>`; }).join('');
         out.innerHTML = `<div class="dec ${pass === ch.tests.length ? 'allow' : 'deny'}">${pass}/${ch.tests.length} tests pass</div>` + rows;
         if (pass === ch.tests.length) api.solve(l.id); else api.toast('Not yet: read the ✕ lines');
       } catch (e) { out.innerHTML = `<div class="dec err">✕ ${esc(e.message)}</div>`; }
@@ -164,7 +164,7 @@ window.LAB = (function () {
   function decisionHTML(r, esc) {
     const cls = r.decision === 'ALLOW' ? 'allow' : r.decision === 'EXPLICIT DENY' ? 'deny' : 'imp';
     return `<div class="dec ${cls}">${r.decision === 'ALLOW' ? '✓' : '✕'} ${r.decision}</div><div class="why">${esc(r.reason)}</div>` +
-      r.trace.map(t => `<div class="tr ${t.match ? (t.effect === 'Deny' ? 'no' : 'ok') : 'skip'}">${t.match ? '●' : '○'} [${esc(IAM.NAMES[t.layer])}] ${esc(t.sid)} (${t.effect}): ${esc(t.why)}</div>`).join('');
+      r.trace.map(t => `<div class="tr ${t.match ? (t.effect === 'Deny' ? 'bad' : 'ok') : 'skip'}">${t.match ? '●' : '○'} [${esc(IAM.NAMES[t.layer])}] ${esc(t.sid)} (${t.effect}): ${esc(t.why)}</div>`).join('');
   }
   return { render };
 })();

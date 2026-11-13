@@ -172,7 +172,7 @@ LESSONS.push({
       words: ['aws:MultiFactorAuthPresent', 'BoolIfExists', 'MFA-protected delete'],
       flow: { from: 'req', to: 'res', label: 'MFA?', detail: ['MultiFactorAuthPresent: false', '→ statement skipped'], color: 'red' }, focus: ['req', 'res'],
       cmds: [{ c: 'aws sts get-session-token --serial-number arn:aws:iam::111122223333:mfa/alice --token-code 123456 --query Credentials.Expiration', o: '"2026-11-14T00:30:00+00:00"', k: 'sts' }] },
-    { t: 'Policy variables', sub: '&#36;{aws:username} & friends',
+    { t: 'Policy variables', sub: '${aws:username} & friends',
       body: `<p>Variables are filled in per request, so one policy works for every user:</p><p><code>"Resource": "arn:aws:s3:::team-docs/home/&#36;{aws:username}/*"</code> → alice can only touch <code>home/alice/</code>, bob only <code>home/bob/</code>.</p><p>Others: <code>&#36;{aws:PrincipalTag/team}</code>, <code>&#36;{aws:userid}</code>. Variables require <code>"Version": "2012-10-17"</code>.</p>`,
       analogy: `A variable is a <b>mail-merge field</b>: one letter template, each person's name filled in.`,
       hook: `<b>&#36;{aws:username} = "the person asking".</b>`,
